@@ -903,6 +903,8 @@ function startNewRound(){
 document.addEventListener('keydown',e=>{
   // If the celebration screen is visible, Enter moves to next level
   if(e.key==='Enter'){
+// ADD THIS LINE BELOW TO STOP THE BROWSER FROM CLICKING FOCUSED BUTTONS
+    e.preventDefault();
     if(document.getElementById('celebration').classList.contains('show')){
       startNewRound(); return;
     }
