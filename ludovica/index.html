@@ -346,76 +346,79 @@
     100% { transform:translateY(110vh) rotate(720deg); opacity:0.5; }
   }
 
-  /* mode selector */
-  .mode-screen {
-    position:fixed; inset:0; z-index:200;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:24px; text-align:center;
-    background:linear-gradient(160deg,#fff0f8 0%,#e8faf0 50%,#fffbe8 100%);
-    transition:opacity 0.4s;
+
+  /* ── times table study screen ── */
+  .study-screen {
+    position:fixed; inset:0; z-index:50;
+    display:flex; flex-direction:column; align-items:center;
+    padding:20px 16px 28px; overflow-y:auto;
+    opacity:0; pointer-events:none; transition:opacity 0.35s;
   }
-  .mode-screen.hidden { opacity:0; pointer-events:none; }
-  .mode-screen h2 {
+  .study-screen.show { opacity:1; pointer-events:all; }
+  .season-spring .study-screen { background:linear-gradient(160deg,#fff0f8,#e8faf0,#fffbe8); }
+  .season-summer .study-screen { background:linear-gradient(160deg,#fffbe0,#d0f4ff,#fff0c8); }
+  .season-autumn .study-screen { background:linear-gradient(160deg,#fff3e0,#ffe0b0,#ffd0c0); }
+  .season-winter .study-screen { background:linear-gradient(160deg,#e8f4ff,#d8eeff,#f0f8ff); }
+  .study-title {
     font-family:'Fredoka One',cursive;
-    font-size:clamp(1.8rem,5vw,2.8rem);
-    color:var(--dark); margin-bottom:8px;
+    font-size:clamp(1.4rem,4vw,2rem);
+    color:var(--dark); margin:8px 0 4px; text-align:center;
   }
-  .mode-screen .mode-sub {
-    font-size:1rem; font-weight:700; color:#a060c0; margin-bottom:32px;
+  .study-sub { font-size:0.9rem; font-weight:700; color:#999; margin-bottom:16px; text-align:center; }
+  .study-grid { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; width:100%; max-width:680px; margin-bottom:20px; }
+  .study-card {
+    background:white; border-radius:18px; padding:12px 16px;
+    box-shadow:0 4px 18px rgba(0,0,0,0.09); min-width:130px; flex:1;
   }
-  .mode-cards { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
-  .mode-card {
-    background:white; border-radius:28px;
-    padding:28px 24px; width:200px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.10);
-    cursor:pointer; border:4px solid transparent;
-    transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    display:flex; flex-direction:column; align-items:center; gap:10px;
+  .study-card h3 {
+    font-family:'Fredoka One',cursive; font-size:1.1rem;
+    text-align:center; padding-bottom:7px; margin-bottom:8px;
   }
-  .mode-card:hover { transform:translateY(-6px) scale(1.03); box-shadow:0 16px 40px rgba(0,0,0,0.14); }
-  .mode-card:active { transform:translateY(0) scale(0.97); }
-  .mode-card.add-sub { border-color:#FF6EB4; }
-  .mode-card.multiply { border-color:#74C7F0; }
-  .mode-card .mc-emoji { font-size:3.2rem; }
-  .mode-card .mc-title { font-family:'Fredoka One',cursive; font-size:1.3rem; color:var(--dark); }
-  .mode-card .mc-desc  { font-size:0.82rem; font-weight:700; color:#888; line-height:1.4; }
-  .mode-card.add-sub .mc-badge { background:#FF6EB4; }
-  .mode-card.multiply .mc-badge { background:#74C7F0; }
-  .mc-badge {
-    font-family:'Fredoka One',cursive; font-size:0.82rem;
-    color:white; padding:3px 12px; border-radius:14px; margin-top:4px;
+  .season-spring .study-card h3 { color:#e060b0; border-bottom:3px solid #ffd0ef; }
+  .season-summer .study-card h3 { color:#d08000; border-bottom:3px solid #ffedb0; }
+  .season-autumn .study-card h3 { color:#c05000; border-bottom:3px solid #ffd0a0; }
+  .season-winter .study-card h3 { color:#2070b0; border-bottom:3px solid #c0dff8; }
+  .study-row {
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:0.85rem; font-weight:700; color:var(--dark);
+    padding:2px 0; border-bottom:1px solid #f5f5f5;
   }
+  .study-row:last-child { border-bottom:none; }
+  .study-ans {
+    font-family:'Fredoka One',cursive; font-size:0.95rem;
+  }
+  .season-spring .study-ans { color:#e060b0; }
+  .season-summer .study-ans { color:#d08000; }
+  .season-autumn .study-ans { color:#c05000; }
+  .season-winter .study-ans { color:#2070b0; }
+  .btn-go {
+    font-family:'Fredoka One',cursive; font-size:1.25rem;
+    border:none; cursor:pointer; padding:15px 38px; border-radius:22px;
+    color:white; transition:transform 0.1s, box-shadow 0.1s;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn-go:active { transform:translateY(4px); }
+  .season-spring .btn-go { background:linear-gradient(135deg,#e060b0,#c030a0); box-shadow:0 5px 0 #8a1060; }
+  .season-summer .btn-go { background:linear-gradient(135deg,#f5a300,#e08000); box-shadow:0 5px 0 #a05000; }
+  .season-autumn .btn-go { background:linear-gradient(135deg,#d06010,#a03800); box-shadow:0 5px 0 #702000; }
+  .season-winter .btn-go { background:linear-gradient(135deg,#3090d0,#1060a0); box-shadow:0 5px 0 #004080; }
 
   @media (max-width:400px) {
     .card { padding:20px 14px; }
     .num-box,.answer-box { width:64px; height:64px; font-size:2rem; }
     .num-btn { font-size:1.2rem; padding:11px 0; }
-    .mode-cards { flex-direction:column; align-items:center; }
-    .mode-card { width:260px; }
   }
 </style>
 </head>
 <body class="season-spring">
-<div class="mode-screen" id="mode-screen">
-  <div class="crown" style="font-size:2.6rem;margin-bottom:8px">👑</div>
-  <h2>Ludovica's Maths Challenge!</h2>
-  <div class="mode-sub">Which type of maths today? 🤔</div>
-  <div class="mode-cards">
-    <div class="mode-card add-sub" onclick="chooseMode('addsub')">
-      <div class="mc-emoji">➕➖</div>
-      <div class="mc-title">Add &amp; Subtract</div>
-      <div class="mc-desc">Spring, Summer,<br>Autumn &amp; Winter<br>addition and subtraction</div>
-      <div class="mc-badge">4 Levels</div>
-    </div>
-    <div class="mode-card multiply" onclick="chooseMode('multiply')">
-      <div class="mc-emoji">✖️</div>
-      <div class="mc-title">Multiplication</div>
-      <div class="mc-desc">Times tables from<br>2×2 all the way<br>to 12×8!</div>
-      <div class="mc-badge">4 Levels</div>
-    </div>
-  </div>
+<div class="bg-layer"></div>
+<div id="study-screen" class="study-screen">
+  <div id="study-crown" style="font-size:2.2rem;margin-top:4px">🌸</div>
+  <div class="study-title" id="study-title">Study Time!</div>
+  <div class="study-sub">Learn these facts, then press Go! 📚</div>
+  <div class="study-grid" id="study-grid"></div>
+  <button class="btn-go" tabindex="-1" onclick="dismissStudy()">I'm Ready — Let's Go! 🚀</button>
 </div>
-
 <div id="particles"></div>
 
 <div class="container">
@@ -423,9 +426,7 @@
     <div class="crown" id="hd-crown">🌸</div>
     <h1>Ludovica's Maths Challenge!</h1>
     <div class="subtitle" id="hd-subtitle">Spring Addition ➕</div>
-    <div style="margin-top:8px">
-      <button onclick="goHome()" style="font-family:'Nunito',sans-serif;font-weight:700;font-size:0.8rem;border:none;cursor:pointer;background:rgba(0,0,0,0.07);color:var(--dark);padding:4px 14px;border-radius:20px;">🏠 Choose Mode</button>
-    </div>
+    <div style="margin-top:6px"><button onclick="goHome()" style="font-family:'Nunito',sans-serif;font-weight:700;font-size:0.8rem;border:none;cursor:pointer;background:rgba(0,0,0,0.07);color:#3D2C5E;padding:4px 14px;border-radius:20px;">🏠 Choose Mode</button></div>
   </header>
 
   <div class="level-dots" id="level-dots">
@@ -466,8 +467,8 @@
     </div>
     <div class="numpad" id="numpad"></div>
     <div class="actions">
-      <button class="btn-clear" onclick="clearAnswer()">🗑️ Clear</button>
-      <button class="btn-check" onclick="checkAnswer()">✅ Check!</button>
+      <button class="btn-clear" tabindex="-1" onclick="clearAnswer()">🗑️ Clear</button>
+      <button class="btn-check" tabindex="-1" onclick="checkAnswer()">✅ Check!</button>
     </div>
     <div class="feedback" id="feedback">
       <div class="fb-emoji" id="fb-emoji">🎉</div>
@@ -481,7 +482,7 @@
   <div class="celeb-emoji" id="celeb-emoji">🎉</div>
   <h2 id="celeb-title">YOU DID IT!</h2>
   <p  id="celeb-msg">Amazing job, Ludovica! 🌟</p>
-  <button class="btn-next-level" id="btn-next" onclick="startNewRound()">Next Level! 🚀</button>
+  <button class="btn-next-level" tabindex="-1" id="btn-next" onclick="startNewRound()">Next Level! 🚀</button>
 </div>
 
 <script>
@@ -489,15 +490,6 @@
 //  LEVEL DEFINITIONS
 // ══════════════════════════════════════════════
 const NAME = "Ludovica";
-
-// ── Multiplication combo builder ──
-function makeTimesCombos(tables) {
-  const all = [];
-  tables.forEach(t => {
-    for (let n = 1; n <= 12; n++) all.push([t, n]);
-  });
-  return shuffle(all);
-}
 
 const LEVELS_ADDSUB = [
   {
@@ -552,6 +544,7 @@ const LEVELS_ADDSUB = [
     chars:    ["⛄","🦌","🐧","🎿","🧊","❄️","🎁","🦉"],
     fireworks:["❄️","⛄","⭐","✨","🎁","🌟","💙"],
     combos:   makeCombos(true, ([a,b])=> a >= 10 && a <= 20 && b >= 1 && b <= 9 && a-b >= 0),
+    pad50:    true,
     maxAns:   19,
     hintFn:   (a,b) => `Hint: start at ${a}, count back ${b}! 🤚`,
     promptFn: (a,b) => `What does ${a} − ${b} equal? 🤔`,
@@ -560,78 +553,64 @@ const LEVELS_ADDSUB = [
 
 const LEVELS_MULTIPLY = [
   {
-    label:    "🌸 Level 1 — 2, 5 & 10 Times Tables",
-    season:   "spring",
-    crown:    "🌸",
-    subtitle: "2×, 5× & 10× Tables ✖️",
-    op:       "×",
+    label:"🌸 Level 1 — 2, 5 & 10 Times Tables", season:"spring", crown:"🌸",
+    subtitle:"2×, 5× & 10× Tables ✖️", op:"×",
     particles:["🌸","⭐","🌼","✨","🌷","💫","🍀"],
-    chars:    ["🐣","🦋","🌸","🐰","🌷","🐥","🌼","🐸"],
+    chars:["🐣","🦋","🌸","🐰","🌷","🐥","🌼","🐸"],
     fireworks:["🌸","🌼","💐","✨","🌷","⭐","💫"],
-    combos:   makeTimesCombos([2, 5, 10]),
-    maxAns:   120,
-    hintFn:   (a,b) => `Hint: ${a} × ${b} means ${b} groups of ${a}! 🤔`,
-    promptFn: (a,b) => `What is ${a} × ${b}? 🤔`,
-    isMultiply: true,
+    combos:makeTimesCombos([2,5,10]), tables:[2,5,10], maxAns:120,
+    hintFn:(a,b)=>`Hint: ${a} × ${b} means ${b} groups of ${a}! 🤔`,
+    promptFn:(a,b)=>`What is ${a} × ${b}? 🤔`,
   },
   {
-    label:    "☀️ Level 2 — 3 & 4 Times Tables",
-    season:   "summer",
-    crown:    "☀️",
-    subtitle: "3× & 4× Tables ✖️",
-    op:       "×",
+    label:"☀️ Level 2 — 3 & 4 Times Tables", season:"summer", crown:"☀️",
+    subtitle:"3× & 4× Tables ✖️", op:"×",
     particles:["☀️","⭐","🌻","✨","🍦","💫","🌴"],
-    chars:    ["🦀","🐠","🌻","🏄","🌺","🦜","🐙","🍉"],
+    chars:["🦀","🐠","🌻","🏄","🌺","🦜","🐙","🍉"],
     fireworks:["☀️","🌻","⭐","✨","🌊","🍦","💛"],
-    combos:   makeTimesCombos([3, 4]),
-    maxAns:   48,
-    hintFn:   (a,b) => `Hint: ${a} × ${b} — try skip counting in ${a}s! 🔢`,
-    promptFn: (a,b) => `What is ${a} × ${b}? 🤔`,
-    isMultiply: true,
+    combos:makeTimesCombos([3,4]), tables:[3,4], maxAns:48,
+    hintFn:(a,b)=>`Hint: ${a} × ${b} — try skip counting in ${a}s! 🔢`,
+    promptFn:(a,b)=>`What is ${a} × ${b}? 🤔`,
   },
   {
-    label:    "🍂 Level 3 — 6 & 9 Times Tables",
-    season:   "autumn",
-    crown:    "🍂",
-    subtitle: "6× & 9× Tables ✖️",
-    op:       "×",
+    label:"🍂 Level 3 — 6 & 9 Times Tables", season:"autumn", crown:"🍂",
+    subtitle:"6× & 9× Tables ✖️", op:"×",
     particles:["🍂","🍁","🎃","🌰","🍄","🦔","🍎"],
-    chars:    ["🦔","🍁","🎃","🦉","🌰","🐿️","🍂","🦊"],
+    chars:["🦔","🍁","🎃","🦉","🌰","🐿️","🍂","🦊"],
     fireworks:["🍁","🍂","⭐","✨","🎃","🌰","🔥"],
-    combos:   makeTimesCombos([6, 9]),
-    maxAns:   108,
-    hintFn:   (a,b) => `Hint: ${a} × ${b} — the 9s trick: digits add up to 9! 🤩`,
-    promptFn: (a,b) => `What is ${a} × ${b}? 🤔`,
-    isMultiply: true,
+    combos:makeTimesCombos([6,9]), tables:[6,9], maxAns:108,
+    hintFn:(a,b)=>`Hint: ${a} × ${b} — the 9s trick: digits add to 9! 🤩`,
+    promptFn:(a,b)=>`What is ${a} × ${b}? 🤔`,
   },
   {
-    label:    "❄️ Level 4 — 7 & 8 Times Tables",
-    season:   "winter",
-    crown:    "❄️",
-    subtitle: "7× & 8× Tables ✖️",
-    op:       "×",
+    label:"❄️ Level 4 — 7 & 8 Times Tables", season:"winter", crown:"❄️",
+    subtitle:"7× & 8× Tables ✖️", op:"×",
     particles:["❄️","⛄","🌨️","🎿","🧊","🦌","🎁"],
-    chars:    ["⛄","🦌","🐧","🎿","🧊","❄️","🎁","🦉"],
+    chars:["⛄","🦌","🐧","🎿","🧊","❄️","🎁","🦉"],
     fireworks:["❄️","⛄","⭐","✨","🎁","🌟","💙"],
-    combos:   makeTimesCombos([7, 8]),
-    maxAns:   96,
-    hintFn:   (a,b) => `Hint: ${a} × ${b} — these are the tricky ones, keep going! 💪`,
-    promptFn: (a,b) => `What is ${a} × ${b}? 🤔`,
-    isMultiply: true,
+    combos:makeTimesCombos([7,8]), tables:[7,8], maxAns:96,
+    hintFn:(a,b)=>`Hint: ${a} × ${b} — these are the tricky ones, keep going! 💪`,
+    promptFn:(a,b)=>`What is ${a} × ${b}? 🤔`,
   },
 ];
 
-let LEVELS = LEVELS_ADDSUB; // default
+function makeTimesCombos(tables) {
+  const all=[];
+  tables.forEach(t=>{ for(let n=1;n<=12;n++) all.push([t,n]); });
+  return shuffle(all);
+}
+
+let LEVELS = null; // set by mode choice
 let currentMode = 'addsub';
 
 function makeCombos(isSub, filterFn) {
   const all = [];
   if (!isSub) {
     // addition: pairs a<=b to avoid exact duplicates
-    for (let a=0;a<=9;a++) for (let b=a;b<=9;b++) all.push([a,b]);
+    for (let a=1;a<=9;a++) for (let b=a;b<=9;b++) all.push([a,b]);
   } else {
     // subtraction: a-b, no negatives
-    for (let a=0;a<=20;a++) for (let b=0;b<=a && b<=9;b++) all.push([a,b]);
+    for (let a=1;a<=20;a++) for (let b=0;b<=a && b<=9;b++) all.push([a,b]);
   }
   return shuffle(all.filter(filterFn));
 }
@@ -673,6 +652,7 @@ function startLevel(lvl) {
   const L = LEVELS[lvl];
   combos = [...L.combos]; // fresh shuffle each level start
   combos = shuffle(combos);
+  if (L.pad50) { while (combos.length < 50) combos = combos.concat(shuffle([...L.combos])); combos = combos.slice(0, 50); }
   currentIdx=0; score=0; streak=0;
 
   // Season theme
@@ -687,6 +667,34 @@ function startLevel(lvl) {
   updateScore();
   updateStreak();
   updateDots();
+  if (L.tables) {
+    showStudyScreen(L);
+  } else {
+    showQuestion();
+  }
+}
+
+function showStudyScreen(L) {
+  const ss = document.getElementById('study-screen');
+  document.getElementById('study-crown').textContent = L.crown;
+  document.getElementById('study-title').textContent = L.label;
+  const grid = document.getElementById('study-grid');
+  grid.innerHTML = '';
+  L.tables.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'study-card';
+    let html = `<h3>${t}× Table</h3>`;
+    for (let n = 1; n <= 12; n++) {
+      html += `<div class="study-row"><span>${t} × ${n} =</span><span class="study-ans">${t*n}</span></div>`;
+    }
+    card.innerHTML = html;
+    grid.appendChild(card);
+  });
+  ss.classList.add('show');
+}
+
+function dismissStudy() {
+  document.getElementById('study-screen').classList.remove('show');
   showQuestion();
 }
 
@@ -708,6 +716,7 @@ function buildNumpad() {
   for(let n=0;n<=9;n++){
     const btn=document.createElement('button');
     btn.className='num-btn'; btn.textContent=n;
+    btn.setAttribute('tabindex','-1');
     btn.onclick=()=>inputNumber(n);
     pad.appendChild(btn);
   }
@@ -738,7 +747,7 @@ function showQuestion() {
   if(currentIdx>=combos.length){celebrate();return;}
   const L=LEVELS[currentLevel];
   let [a,b]=combos[currentIdx];
-  // For addition only, randomly flip
+  // For addition, randomly flip
   if(L.op==='+' && Math.random()<0.5) [a,b]=[b,a];
   currentA=a; currentB=b; userAnswer=null;
 
@@ -766,8 +775,8 @@ function inputNumber(n) {
   if(userAnswer===null) {
     userAnswer=n;
   } else {
-    const appended = userAnswer*10+n;
-    userAnswer = (appended <= maxAns) ? appended : n;
+    const two=userAnswer*10+n;
+    userAnswer=(two<=maxAns)?two:n; // two-digit cap
   }
   const box=document.getElementById('answer-box');
   box.textContent=userAnswer; box.classList.add('has-answer');
@@ -786,10 +795,7 @@ function checkAnswer() {
   if(userAnswer===null) return;
   if(document.getElementById('feedback').classList.contains('show')) return;
   const L=LEVELS[currentLevel];
-  let correct;
-  if(L.op==='+') correct = currentA+currentB;
-  else if(L.op==='−') correct = currentA-currentB;
-  else correct = currentA*currentB; // ×
+  const correct = L.op==='+' ? currentA+currentB : L.op==='−' ? currentA-currentB : currentA*currentB;
 
   if(userAnswer===correct) {
     score++; streak++;
@@ -871,9 +877,7 @@ function celebrate(){
   document.getElementById('celeb-emoji').textContent=isLast?'👑':L.particles[0];
   document.getElementById('celeb-title').textContent=isLast?'🎆 ALL 4 DONE! 🎆':`${L.label} Complete!`;
   document.getElementById('celeb-msg').textContent=isLast
-    ?(currentMode==='multiply'
-      ?`INCREDIBLE, ${NAME}! You finished ALL 4 times tables levels! You're a multiplication superstar! 🌟👑`
-      :`INCREDIBLE, ${NAME}! You finished ALL 4 levels! You're a maths superstar! 🌟👑`)
+    ?`INCREDIBLE, ${NAME}! You finished ALL 4 levels! You're a maths superstar! 🌟👑`
     :`Brilliant, ${NAME}! ${score} / ${combos.length} correct! Ready for the next challenge?`;
   document.getElementById('btn-next').textContent=isLast?'Play Again! 🎮':`${LEVELS[currentLevel+1].crown} Level ${currentLevel+2}!`;
 }
@@ -897,28 +901,59 @@ function startNewRound(){
 
 // keyboard
 document.addEventListener('keydown',e=>{
+  // If the celebration screen is visible, Enter moves to next level
+  if(e.key==='Enter'){
+    if(document.getElementById('celebration').classList.contains('show')){
+      startNewRound(); return;
+    }
+    // If the study screen is visible, Enter dismisses it
+    if(document.getElementById('study-screen').classList.contains('show')){
+      dismissStudy(); return;
+    }
+    checkAnswer(); return;
+  }
   if(e.key>='0'&&e.key<='9') inputNumber(parseInt(e.key));
-  if(e.key==='Enter') checkAnswer();
   if(e.key==='Backspace'||e.key==='Delete') clearAnswer();
 });
 
-// Show mode screen first — don't auto-init
-document.querySelector('.container').style.display = 'none';
-document.getElementById('mode-screen').classList.remove('hidden');
+// ── MODE SELECTOR ──
+const modeOverlay = document.createElement('div');
+modeOverlay.id = 'mode-overlay';
+modeOverlay.style.cssText = 'position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;background:linear-gradient(160deg,#fff0f8,#e8faf0,#fffbe8);';
+modeOverlay.innerHTML = `
+  <div style="font-size:2.4rem;margin-bottom:6px">👑</div>
+  <div style="font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,5vw,2.4rem);color:#3D2C5E;margin-bottom:6px">Ludovica's Maths Challenge!</div>
+  <div style="font-size:0.95rem;font-weight:700;color:#a060c0;margin-bottom:28px">Which type of maths today? 🤔</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;">
+    <div onclick="chooseMode('addsub')" style="background:white;border-radius:24px;padding:26px 22px;width:190px;box-shadow:0 8px 28px rgba(0,0,0,0.10);cursor:pointer;border:4px solid #FF6EB4;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div style="font-size:3rem">➕➖</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:#3D2C5E">Add &amp; Subtract</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#aaa;line-height:1.4">Spring, Summer,<br>Autumn &amp; Winter</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:0.8rem;background:#FF6EB4;color:white;padding:3px 12px;border-radius:12px">4 Levels</div>
+    </div>
+    <div onclick="chooseMode('multiply')" style="background:white;border-radius:24px;padding:26px 22px;width:190px;box-shadow:0 8px 28px rgba(0,0,0,0.10);cursor:pointer;border:4px solid #74C7F0;display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div style="font-size:3rem">✖️</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:1.2rem;color:#3D2C5E">Multiplication</div>
+      <div style="font-size:0.8rem;font-weight:700;color:#aaa;line-height:1.4">Times tables<br>2× up to 12×8</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:0.8rem;background:#74C7F0;color:white;padding:3px 12px;border-radius:12px">4 Levels</div>
+    </div>
+  </div>
+`;
+document.body.appendChild(modeOverlay);
 
 function chooseMode(mode) {
   currentMode = mode;
-  LEVELS = mode === 'multiply' ? LEVELS_MULTIPLY : LEVELS_ADDSUB;
-  document.getElementById('mode-screen').classList.add('hidden');
-  document.querySelector('.container').style.display = '';
+  LEVELS = (mode === 'multiply') ? LEVELS_MULTIPLY : LEVELS_ADDSUB;
+  modeOverlay.style.display = 'none';
   init();
 }
 
 function goHome() {
   if (feedbackTimer) clearTimeout(feedbackTimer);
   document.getElementById('celebration').classList.remove('show');
-  document.querySelector('.container').style.display = 'none';
-  document.getElementById('mode-screen').classList.remove('hidden');
-}</script>
+  document.getElementById('study-screen').classList.remove('show');
+  modeOverlay.style.display = 'flex';
+}
+</script>
 </body>
 </html>
