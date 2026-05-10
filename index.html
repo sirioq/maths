@@ -131,10 +131,48 @@
     padding:3px 12px; border-radius:20px;
     display:inline-block; margin-top:7px;
     opacity:0; transform:scale(0);
-    transition:opacity 0.3s,transform 0.3s;
+    transition:opacity 0.3s,transform 0.3s,background 0.4s,color 0.4s,font-size 0.3s;
     box-shadow:0 3px 0 #c9a200;
   }
   .streak-badge.show { opacity:1; transform:scale(1); }
+  .streak-badge.legend {
+    background:linear-gradient(135deg,#FFD700,#FF8C00);
+    color:white; font-size:1.05rem;
+    box-shadow:0 3px 0 #b05000, 0 0 14px rgba(255,180,0,0.5);
+    animation: legendPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes legendPulse {
+    0%,100% { box-shadow:0 3px 0 #b05000, 0 0 10px rgba(255,180,0,0.4); }
+    50%      { box-shadow:0 3px 0 #b05000, 0 0 22px rgba(255,200,0,0.8); }
+  }
+
+  /* milestone flash */
+  #milestone-flash {
+    position:fixed; inset:0; z-index:150;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:24px;
+    opacity:0; pointer-events:none;
+    transition:opacity 0.3s;
+  }
+  #milestone-flash.show { opacity:1; pointer-events:all; }
+  .milestone-emoji { font-size:5rem; animation:miBounce 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  .milestone-title {
+    font-family:'Fredoka One',cursive;
+    font-size:clamp(2rem,7vw,3.5rem);
+    color:white; text-shadow:3px 3px 0 rgba(0,0,0,0.2);
+    margin:10px 0 6px;
+    animation:miBounce 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .milestone-sub {
+    font-family:'Nunito',sans-serif; font-weight:800;
+    font-size:1.2rem; color:rgba(255,255,255,0.92);
+    animation:miBounce 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  @keyframes miBounce { 0% { transform:scale(0) rotate(-8deg); } 100% { transform:scale(1) rotate(0); } }
+  .season-spring #milestone-flash { background:linear-gradient(135deg,#e040a0cc,#a020c0cc); backdrop-filter:blur(6px); }
+  .season-summer #milestone-flash { background:linear-gradient(135deg,#f5a300cc,#e06000cc); backdrop-filter:blur(6px); }
+  .season-autumn #milestone-flash { background:linear-gradient(135deg,#d06010cc,#802000cc); backdrop-filter:blur(6px); }
+  .season-winter #milestone-flash { background:linear-gradient(135deg,#2080d0cc,#0040a0cc); backdrop-filter:blur(6px); }
 
   /* questions left counter */
   .questions-left-row {
@@ -485,6 +523,12 @@
   <button class="btn-next-level" tabindex="-1" id="btn-next" onclick="startNewRound()">Next Level! 🚀</button>
 </div>
 
+<div id="milestone-flash">
+  <div class="milestone-emoji" id="mi-emoji">🏆</div>
+  <div class="milestone-title" id="mi-title">15 IN A ROW!</div>
+  <div class="milestone-sub" id="mi-sub">You're legendary!</div>
+</div>
+
 <script>
 // ══════════════════════════════════════════════
 //  LEVEL DEFINITIONS
@@ -611,8 +655,8 @@ function makeCombos(isSub, filterFn) {
     // addition: pairs a<=b to avoid exact duplicates
     for (let a=1;a<=9;a++) for (let b=a;b<=9;b++) all.push([a,b]);
   } else {
-    // subtraction: a-b, no negatives
-    for (let a=1;a<=20;a++) for (let b=0;b<=a && b<=9;b++) all.push([a,b]);
+    // subtraction: a-b, no negatives, exclude subtracting 0
+    for (let a=1;a<=20;a++) for (let b=1;b<=a && b<=9;b++) all.push([a,b]);
   }
   return shuffle(all.filter(filterFn));
 }
@@ -623,17 +667,72 @@ function shuffle(arr) {
   return a;
 }
 
-const PROMPTS_RIGHT = [
-  "Woohoo! You're amazing! 🌟","Brilliant work! 🎉","You got it! Super smart! 💡",
-  `Fantastic, ${NAME}! ⭐`,"YES! That's exactly right! 🥳",
-  "Perfect! You're a maths star! 🌠","Incredible! Keep going! 🦄","WOW! You're on fire! 🔥",
-];
-const PROMPTS_WRONG = [
-  "Oops! Try again! 💪","Almost! Give it another go! 🌈",
-  "Not quite... you can do it! ✨","Keep trying, you're so close! 🐱","Hmm, try a different number! 🌟",
-];
-const STREAK_MSGS = ['','','2 in a row! 🔥','3 in a row! 🚀','4 in a row! ⚡','5 in a row! 🌟🌟',
-  '6 in a row! 💥','7 in a row! 🏆','8 in a row! 👑','9 in a row! 🦄','10 in a row! 🎆'];
+function getPromptsRight() { return [
+  `Woohoo, ${NAME}! You're amazing! 🌟`,
+  "Brilliant work! 🎉",
+  `You got it, ${NAME}! Super smart! 💡`,
+  `Fantastic, ${NAME}! ⭐`,
+  "YES! That's exactly right! 🥳",
+  `Perfect, ${NAME}! You're a maths star! 🌠`,
+  "Incredible! Keep going! 🦄",
+  `WOW, ${NAME}! You're on fire! 🔥`,
+  "Spot on! Brilliant! 🎯",
+  `${NAME}, you're unstoppable! 💫`,
+]; }
+function getPromptsWrong() { return [
+  `Oops! Try again, ${NAME}! 💪`,
+  "Almost! Give it another go! 🌈",
+  `Not quite, ${NAME}... you can do it! ✨`,
+  `Keep trying, ${NAME} — you're so close! 🐱`,
+  "Hmm, try a different number! 🌟",
+  `You've got this, ${NAME}! 🌈`,
+]; }
+function getStreakMsgs() { return [
+  '','',
+  `2 in a row, ${NAME}! 🔥`,
+  `3 in a row! Keep it up, ${NAME}! 🚀`,
+  `4 in a row, ${NAME}! ⚡`,
+  `5 in a row! You're on fire, ${NAME}! 🌟🌟`,
+  `6 in a row, ${NAME}! 💥`,
+  `7 in a row! Amazing, ${NAME}! 🏆`,
+  `8 in a row, ${NAME}! 👑`,
+  `9 in a row! Incredible, ${NAME}! 🦄`,
+  `10 in a row! LEGENDARY, ${NAME}! 🎆`,
+]; }
+
+const MILESTONES = {
+  15: { emoji:'🌋', title:'15 IN A ROW!',  sub: n=>`${n}, you are UNSTOPPABLE! 🔥` },
+  20: { emoji:'👑', title:'20 IN A ROW!',  sub: n=>`TWENTY! ${n} is a maths MACHINE! 💥` },
+  25: { emoji:'🦄', title:'25 IN A ROW!',  sub: n=>`${n}... this is pure MAGIC! ✨🦄` },
+  30: { emoji:'🎆', title:'30 IN A ROW!',  sub: n=>`THIRTY! ${n}, are you even real?! 🏆👑` },
+};
+
+function getLegendMsg(s) {
+  const emojis = ['🔥','💥','⚡','🌋','👑','🦄','🎆','🌟','💫','🏆'];
+  const e = emojis[(s - 11) % emojis.length];
+  const lines = [
+    `${s} in a row, ${NAME}! ${e}`,
+    `UNSTOPPABLE! ${s} streak! ${e}`,
+    `${NAME} is on FIRE! ${s}! ${e}`,
+    `${s} and counting, ${NAME}! ${e}`,
+    `LEGENDARY x${s}, ${NAME}! ${e}`,
+  ];
+  return lines[(s - 11) % lines.length];
+}
+
+let milestoneTimer = null;
+function checkMilestone(s) {
+  const m = MILESTONES[s];
+  if (!m) return;
+  const el = document.getElementById('milestone-flash');
+  document.getElementById('mi-emoji').textContent = m.emoji;
+  document.getElementById('mi-title').textContent = m.title;
+  document.getElementById('mi-sub').textContent = m.sub(NAME);
+  el.classList.add('show');
+  firework([m.emoji,'⭐','✨','💫','🌟']);
+  if (milestoneTimer) clearTimeout(milestoneTimer);
+  milestoneTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
 
 // ══════════════════════════════════════════════
 //  STATE
@@ -822,8 +921,8 @@ function showFeedback(ok,sub) {
     ?['🎉','🥳','⭐','🌟','🏆','💫','✨','🎊'][Math.floor(Math.random()*8)]
     :['😅','🤔','💪','🌈','😄'][Math.floor(Math.random()*5)];
   document.getElementById('fb-text').textContent=ok
-    ?PROMPTS_RIGHT[Math.floor(Math.random()*PROMPTS_RIGHT.length)]
-    :PROMPTS_WRONG[Math.floor(Math.random()*PROMPTS_WRONG.length)];
+    ?getPromptsRight()[Math.floor(Math.random()*getPromptsRight().length)]
+    :getPromptsWrong()[Math.floor(Math.random()*getPromptsWrong().length)];
   document.getElementById('fb-sub').textContent=sub;
 }
 function hideFeedback(){document.getElementById('feedback').classList.remove('show');}
@@ -846,8 +945,18 @@ function updateProgress(){
 }
 function updateStreak(){
   const b=document.getElementById('streak-badge');
-  if(streak>=2&&STREAK_MSGS[streak]){b.textContent=STREAK_MSGS[Math.min(streak,STREAK_MSGS.length-1)];b.classList.add('show');}
-  else b.classList.remove('show');
+  if(streak < 2){ b.classList.remove('show','legend'); return; }
+
+  if(streak >= 11) {
+    b.textContent = getLegendMsg(streak);
+    b.classList.add('show','legend');
+  } else {
+    const msgs = getStreakMsgs();
+    b.textContent = msgs[streak];
+    b.classList.add('show');
+    b.classList.remove('legend');
+  }
+  checkMilestone(streak);
 }
 
 // ══════════════════════════════════════════════
